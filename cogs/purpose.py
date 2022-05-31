@@ -103,16 +103,18 @@ class Purpose(commands.Cog):
         Allows user to be in a private channel after reacting to the message
         """
 
-        # Get Server ID
+        # Get Server ID, server
         guild_id = int(os.getenv(f'{ENVIRONMENT}_GUILD_ID'))
+        guild = self.client.get_guild(guild_id)
 
         # Check if reaction emoji is as provided and reaction is according to the embed
         if reaction.emoji == '🧠' and reaction.count > 1 and reaction.message.id == self.private_embed:
 
-            # Get server, member who reacted, and the admin role
-            guild = self.client.get_guild(guild_id)
+            # Get member who reacted, and the admin role
             member = user
             admin_role = discord.utils.get(guild.roles, name=os.getenv(f'{ENVIRONMENT}_ADMIN_ROLE'))
+            category = discord.utils.get(guild.categories, name=os.getenv(f'{ENVIRONMENT}_PRIVATE_ROOM_CATEGORY'))
+            print(admin_role, category)
 
             # Initialise Overwrite Permissions
             overwrites = {
@@ -122,7 +124,7 @@ class Purpose(commands.Cog):
             }
             
             # Create text channel with said overwrites
-            await guild.create_text_channel(f'mdhack-group-{self.room_counter}', overwrites=overwrites)
+            await guild.create_text_channel(f'mdhack-group-{self.room_counter}', overwrites=overwrites, category=category, sync_permissions=False)
             
 
 def setup(client):
