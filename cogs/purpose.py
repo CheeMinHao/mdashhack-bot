@@ -125,7 +125,7 @@ class Purpose(commands.Cog):
             
             # Create text channel with said overwrites
             await guild.create_text_channel(f'mdhack-group-{self.room_counter}', overwrites=overwrites, category=category, sync_permissions=False)
-            
+            self.room_counter += 1
 
 def setup(client):
     client.add_cog(Purpose(client))
