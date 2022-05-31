@@ -1,0 +1,6 @@
+1. Technology: Improving the Sorting Efficiency at Sorting Centres
+2. Technology: Loading/Unloading Loose Packages Safely and Quickly
+3. Computer Vision: Fast, Easy and Accurate Damaged Package Detection
+4. Technology/Computer Vision: Asset Management/Surveillance: Real time security monitoring for Iskandar Investment Berhad (IIB) asset, land bank and estates with automated report
+5. Technology/Engineering: Asset Optimization: Alternative energy source for lower electric utilisation for cost reduction
+6. Preventive Flight Collision: Aerodynamic measure, geofencing alert for preventive collision and assessment of safe flight

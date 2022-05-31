@@ -7,14 +7,15 @@ import os
 load_dotenv()
 
 # Choose your environment
-ENVIRONMENT = 'MDHACK'
-# ENVIRONMENT = 'TESTING'
+# ENVIRONMENT = 'MDHACK'
+ENVIRONMENT = 'TESTING'
 
 class Purpose(commands.Cog):
 
     def __init__(self, client):
         self.client = client
         self.private_embed = None
+        self.problem_statement_embed = None
         self.room_counter = 1
 
     @commands.command(aliases = ['readme'])
@@ -61,11 +62,15 @@ class Purpose(commands.Cog):
             await ctx.channel.purge(limit=2)
 
             # Extract New Rules Content
-            read_me_content = util.get_rules()
+            general_rules = util.get_rules('general')
+            voice_chat_rules = util.get_rules('voice_chat')
+            bot_command_rules = util.get_rules('bot_command')
 
             # Create Embed for New Rules
             embedVar = discord.Embed(title="Rules of MDashHack 2022", color=0x00ff00)
-            embedVar.add_field(name="Rules", value=read_me_content, inline=False)
+            embedVar.add_field(name="General Rules", value=general_rules, inline=False)
+            embedVar.add_field(name="Voice Chat Rules", value=voice_chat_rules, inline=False)
+            embedVar.add_field(name="Bot Command Rules", value=bot_command_rules, inline=False)
 
             # Send New Rules
             await ctx.channel.send(embed=embedVar)
@@ -74,6 +79,42 @@ class Purpose(commands.Cog):
             
             # If not, output error
             await ctx.channel.send("Wrong Channel/Not allowed to use this command")
+
+    @commands.command(aliases = ['teamleader'])
+    async def _team_leader(self, ctx):
+
+        """
+        Initialises README for Participants to read when they first enter the server
+        """
+
+        # Checks if Sender is at the right channel and is an Organisor
+        if ctx.channel.id == int(os.getenv(f'{ENVIRONMENT}_TEAM_LEADER_CHANNEL_ID')) and \
+            discord.utils.get(ctx.guild.roles, name=os.getenv(f'{ENVIRONMENT}_ADMIN_ROLE')) in ctx.author.roles:
+
+            # If Yes, Purge the Old Read Me
+            await ctx.channel.purge(limit=2)
+
+            problem_statements = util.get_problem_statements()
+
+            # Create new embed
+            embedVar = discord.Embed(title="Choose Your Problem Statement", color=0x00ff00)
+            embedVar.add_field(name="List of Choices",value=problem_statements, inline=False)
+
+            # Send New Read Me
+            message = await ctx.channel.send(embed=embedVar)
+            # self.problem_statement_embed = message.id
+            await message.add_reaction('1️⃣')
+            await message.add_reaction('2️⃣')
+            await message.add_reaction('3️⃣')
+            await message.add_reaction('4️⃣')
+            await message.add_reaction('5️⃣')
+            await message.add_reaction('6️⃣')
+
+        else:
+            
+            # If not, output error
+            await ctx.channel.send("Wrong Channel/Not allowed to use this command")
+
 
     @commands.command(aliases = ['private'])
     async def _private(self, ctx):

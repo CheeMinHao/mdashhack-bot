@@ -26,10 +26,15 @@ def get_read_me():
     with open(READ_ME_FILE, 'r') as f:
         return f.read()
 
-def get_rules():
-    READ_ME_FILE = 'text_files/rules.txt'
+def get_rules(rule_type):
+    READ_ME_FILE = f'text_files/rules/{rule_type}_rules.txt'
+    with open(READ_ME_FILE, 'r') as f:
+        return f.read()
+
+def get_problem_statements():
+    READ_ME_FILE = 'text_files/problem_statement.txt'
     with open(READ_ME_FILE, 'r') as f:
         return f.read()
 
 # if __name__ == "__main__":
-#     print(get_read_me())
+#     print(get_rules())
