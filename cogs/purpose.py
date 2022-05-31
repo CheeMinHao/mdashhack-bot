@@ -7,8 +7,8 @@ import os
 load_dotenv()
 
 # Choose your environment
-# ENVIRONMENT = 'MDASHHACK'
-ENVIRONMENT = 'TESTING'
+ENVIRONMENT = 'MDASHHACK'
+# ENVIRONMENT = 'TESTING'
 
 class Purpose(commands.Cog):
 
