@@ -7,8 +7,8 @@ import os
 load_dotenv()
 
 # Choose your environment
-# ENVIRONMENT = 'MDHACK'
-ENVIRONMENT = 'TESTING'
+ENVIRONMENT = 'MDHACK'
+# ENVIRONMENT = 'TESTING'
 
 class Purpose(commands.Cog):
 
@@ -121,9 +121,8 @@ class Purpose(commands.Cog):
         Initiates the Embed which allows participants to react to get team leader role
         """
         # Check if at right channel and is admin of the server
-        if ctx.channel.id == int(os.getenv(f'{ENVIRONMENT}_TEAM_LEADER_CHANNEL_ID')):
-            # and \
-            # discord.utils.get(ctx.guild.roles, name=os.getenv(f'{ENVIRONMENT}_ADMIN_ROLE')) in ctx.author.roles:
+        if ctx.channel.id == int(os.getenv(f'{ENVIRONMENT}_TEAM_LEADER_CHANNEL_ID')) and \
+            discord.utils.get(ctx.guild.roles, name=os.getenv(f'{ENVIRONMENT}_ADMIN_ROLE')) in ctx.author.roles:
 
             # Clear old Embed
             await ctx.channel.purge(limit=2)
