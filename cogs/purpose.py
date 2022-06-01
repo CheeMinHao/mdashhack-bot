@@ -7,15 +7,15 @@ import os
 load_dotenv()
 
 # Choose your environment
-ENVIRONMENT = 'MDHACK'
-# ENVIRONMENT = 'TESTING'
+# ENVIRONMENT = 'MDHACK'
+ENVIRONMENT = 'TESTING'
 
 class Purpose(commands.Cog):
 
     def __init__(self, client):
         self.client = client
         self.private_embed = None
-        self.problem_statement_embed = None
+        self.team_leader = None
         self.room_counter = 1
 
     @commands.command(aliases = ['readme'])
@@ -80,15 +80,15 @@ class Purpose(commands.Cog):
             # If not, output error
             await ctx.channel.send("Wrong Channel/Not allowed to use this command")
 
-    @commands.command(aliases = ['teamleader'])
-    async def _team_leader(self, ctx):
+    @commands.command(aliases = ['topicselect'])
+    async def _topic_selection(self, ctx):
 
         """
-        Initialises README for Participants to read when they first enter the server
+        Initialises Embed for participants to select their topic
         """
 
         # Checks if Sender is at the right channel and is an Organisor
-        if ctx.channel.id == int(os.getenv(f'{ENVIRONMENT}_TEAM_LEADER_CHANNEL_ID')) and \
+        if ctx.channel.id == int(os.getenv(f'{ENVIRONMENT}_TOPIC_SELECTION_CHANNEL_ID')) and \
             discord.utils.get(ctx.guild.roles, name=os.getenv(f'{ENVIRONMENT}_ADMIN_ROLE')) in ctx.author.roles:
 
             # If Yes, Purge the Old Read Me
@@ -102,7 +102,6 @@ class Purpose(commands.Cog):
 
             # Send New Read Me
             message = await ctx.channel.send(embed=embedVar)
-            # self.problem_statement_embed = message.id
             await message.add_reaction('1️⃣')
             await message.add_reaction('2️⃣')
             await message.add_reaction('3️⃣')
@@ -114,6 +113,29 @@ class Purpose(commands.Cog):
             
             # If not, output error
             await ctx.channel.send("Wrong Channel/Not allowed to use this command")
+
+    @commands.command(aliases = ['teamleader'])
+    async def _team_leader(self, ctx):
+
+        """
+        Initiates the Embed which allows participants to react to get team leader role
+        """
+        # Check if at right channel and is admin of the server
+        if ctx.channel.id == int(os.getenv(f'{ENVIRONMENT}_TEAM_LEADER_CHANNEL_ID')):
+            # and \
+            # discord.utils.get(ctx.guild.roles, name=os.getenv(f'{ENVIRONMENT}_ADMIN_ROLE')) in ctx.author.roles:
+
+            # Clear old Embed
+            await ctx.channel.purge(limit=2)
+
+            # Create new embed
+            embedVar = discord.Embed(title="Be The Team Leader!", color=0x00ff00)
+            embedVar.add_field(name="React to the Message if You're the Leader of your Team",value="Team leaders will get private access to certain channels that may benefit you and your team.", inline=False)
+            
+            # Send new embed to channel and add reaction
+            message = await ctx.channel.send(embed=embedVar)
+            self.team_leader = message.id
+            await message.add_reaction("💥")
 
 
     @commands.command(aliases = ['private'])
@@ -167,6 +189,11 @@ class Purpose(commands.Cog):
             # Create text channel with said overwrites
             await guild.create_text_channel(f'mdhack-group-{self.room_counter}', overwrites=overwrites, category=category, sync_permissions=False)
             self.room_counter += 1
+
+        elif reaction.emoji == '💥' and reaction.count > 1 and reaction.message.id == self.team_leader:
+            member = user
+            role = discord.utils.get(guild.roles, name=os.getenv(f'{ENVIRONMENT}_TEAM_LEADER_ROLE'))
+            await member.add_roles(role)
 
 def setup(client):
     client.add_cog(Purpose(client))
